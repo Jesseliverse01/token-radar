@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols, ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="pulse" aria-hidden="true"></span>
+    <h1>TOKEN RADAR</h1>
+    <span class="tag">pre-token protocols, ranked by implied value</span>
+  </div>
+  <div class="top-meta">
+    <span id="as-of">snapshot —</span>
+    <span class="badge">model radar-2 · comparables</span>
+  </div>
+</header>
+
+<section class="stats" id="stats" aria-label="Summary"></section>
+
+<section class="controls" aria-label="Filters">
+  <input id="q" type="search" placeholder="Search a protocol…" autocomplete="off">
+  <select id="category" aria-label="Category"><option value="">All categories</option></select>
+  <select id="chain" aria-label="Chain"><option value="">All chains</option></select>
+  <select id="mintvl" aria-label="Minimum TVL">
+    <option value="0">Any TVL</option>
+    <option value="50000000">TVL ≥ $50M</option>
+    <option value="100000000">TVL ≥ $100M</option>
+    <option value="500000000">TVL ≥ $500M</option>
+    <option value="1000000000">TVL ≥ $1B</option>
+  </select>
+  <select id="sort" aria-label="Sort by">
+    <option value="implied">Sort: implied value</option>
+    <option value="tvl">Sort: TVL</option>
+    <option value="growth">Sort: 7d change</option>
+    <option value="age">Sort: age</option>
+    <option value="name">Sort: name</option>
+    <option value="multiple">Sort: multiple</option>
+  </select>
+  <div class="tabs" role="tablist">
+    <button id="tab-pre" class="tab active" role="tab">Pre-token</button>
+    <button id="tab-live" class="tab" role="tab">Live token</button>
+  </div>
+</section>
+
+<p class="count" id="count"></p>
+
+<main>
+  <table id="board">
+    <thead>
+      <tr>
+        <th class="num">#</th>
+        <th>Protocol</th>
+        <th class="num">TVL</th>
+        <th class="num">7d</th>
+        <th class="num">Age</th>
+        <th class="num">× multiple</th>
+        <th>Implied value</th>
+        <th>Signal</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div id="live-wrap" hidden>
+    <table id="live">
+      <thead>
+        <tr>
+          <th>Protocol</th>
+          <th class="num">TVL</th>
+          <th class="num">Market cap</th>
+          <th class="num">mcap / TVL</th>
+          <th class="num">Age</th>
+        </tr>
+      </thead>
+      <tbody id="live-rows"></tbody>
+    </table>
+    <p class="note">Live-token protocols are the comparables, not the radar's subjects. Their median mcap / TVL, category by category, is what prices the pre-token board.</p>
+  </div>
+</main>
+
+<nav class="pager" id="pager" aria-label="Pages"></nav>
+
+<section class="model" aria-label="The model">
+  <h2>How the radar prices a protocol</h2>
+  <p class="formula">implied value = TVL × category multiple × growth × maturity × breadth</p>
+  <p>The multiple is the median market-cap / TVL of the live-token protocols in the same category (at least three of them; otherwise the global median across all live protocols). Growth is the 7-day TVL change, clamped to −50%…+100% and weighted 0.35. Maturity runs 0.75 for a new protocol to 1.00 at three years. Breadth adds 2% per extra chain, up to four. Nothing here is a name list: change the snapshot's figures and the ranking changes with them.</p>
+  <div class="model-cols">
+    <div>
+      <h3>Category multiples</h3>
+      <table id="multiples">
+        <thead><tr><th>Category</th><th class="num">Multiple</th><th class="num">Comparables</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div>
+      <h3>What counts as pre-token</h3>
+      <p>A protocol with no token at all — no market cap, no CoinGecko id, no symbol — that is not a centralised exchange, not a wrapped, staked or bridged product of a token that already trades, and not a versioned copy of another protocol. That is why WBTC, Binance staked ETH and USDT0 are not on this board, even though their TVL is enormous: each is a product of a token that already trades.</p>
+      <h3>What the farm plan is</h3>
+      <p>Seven concrete steps per protocol: what to do, what it costs, how long it takes. Capital scales with the protocol's size, gas follows the chain it lives on, and the hold length follows how old it is. A farm plan earns a position; it does not promise a token.</p>
+    </div>
+  </div>
+</section>
+
+<dialog id="detail" aria-label="Protocol detail"></dialog>
+
+<footer>
+  <p>Token Radar — built for the make.fun bounty <strong>token-radar-01</strong>. Data: DefiLlama snapshot of <span id="foot-date">—</span>, <span id="foot-count">—</span> protocols, watchlist floor $50M. Implied values are estimates from public TVL figures, not prices, and not financial advice. No token is promised by any protocol on this board.</p>
+</footer>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
